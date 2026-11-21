@@ -20,7 +20,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.public_subnet_cidrs[count.index]
   availability_zone       = data.aws_availability_zones.available.names[count.index]
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 
   tags = {
     Name        = "${var.project_name}-public-${count.index}"
@@ -135,7 +135,7 @@ resource "aws_lb" "juice_shop" {
 resource "aws_lb_target_group" "juice_shop" {
   name        = "${var.project_name}-tg"
   port        = 3000
-  protocol    = "HTTP"
+  protocol    = "HTTPS"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
 
@@ -184,7 +184,7 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.juice_shop.arn
   port              = 443
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-3-2021-06"
   certificate_arn   = aws_iam_server_certificate.juice_shop_tls.arn
 
   default_action {
