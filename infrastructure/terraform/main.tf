@@ -106,7 +106,7 @@ resource "aws_ecs_service" "juice_shop" {
   network_configuration {
     subnets          = aws_subnet.public[*].id
     security_groups  = [aws_security_group.ecs.id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   load_balancer {
@@ -125,7 +125,7 @@ resource "aws_ecs_service" "juice_shop" {
 
 resource "aws_cloudwatch_log_group" "juice_shop" {
   name              = "/ecs/${var.project_name}"
-  retention_in_days = 30
+  retention_in_days = 0
 
   tags = {
     Project     = var.project_name
